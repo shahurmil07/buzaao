@@ -3,9 +3,10 @@ import { env } from '../config/env.js'
 
 export const pool = new Pool({
   connectionString: env.DATABASE_URL,
-  max: 10,
+  max: env.isProduction ? 3 : 10,
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 5_000,
+  ssl: env.isProduction ? { rejectUnauthorized: false } : undefined,
 })
 
 pool.on('error', (error) => {

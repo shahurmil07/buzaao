@@ -1,6 +1,8 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { type Express } from 'express'
+import { env } from './config/env.js'
+import { bootstrapDatabase } from './db/bootstrap.js'
 import { errorHandler } from './middleware/error-handler.js'
 import { requireAdmin } from './middleware/require-admin.js'
 import { authRouter } from './routes/auth.js'
@@ -15,13 +17,26 @@ export function createApp(): Express {
 
   app.use(
     cors({
-      origin: 'http://localhost:5173',
+      origin(origin, callback) {
+        if (!origin || env.CORS_ORIGIN.includes(origin)) {
+          callback(null, true)
+          return
+        }
+        callback(new Error('Not allowed by CORS'))
+      },
       credentials: true,
     }),
   )
   app.use(cookieParser())
   app.use(express.json())
 
+  app.use((req, res, next) => {
+    void bootstrapDatabase().then(() => next()).catch(next)
+  })
+
+  app.get('/', (_req, res) => {
+    res.json({ ok: true, service: 'buzaao-api' })
+  })
   app.use('/health', healthRouter)
   app.use('/api/health', healthRouter)
   app.use('/api/admin', authRouter)
@@ -34,3 +49,7 @@ export function createApp(): Express {
 
   return app
 }
+
+const app = createApp()
+
+export default app

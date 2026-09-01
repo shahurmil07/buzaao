@@ -28,7 +28,7 @@ export function verifyAdminToken(token: string): AdminToken {
 export function adminCookieOptions() {
   return {
     httpOnly: true,
-    sameSite: 'lax' as const,
+    sameSite: env.isProduction ? ('none' as const) : ('lax' as const),
     secure: env.isProduction,
     path: '/',
     maxAge: TOKEN_MAX_AGE_MS,
