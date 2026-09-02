@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { type Express } from 'express'
-import { env } from './config/env.js'
+import { isCorsOriginAllowed } from './config/env.js'
 import { bootstrapDatabase } from './db/bootstrap.js'
 import { errorHandler } from './middleware/error-handler.js'
 import { requireAdmin } from './middleware/require-admin.js'
@@ -18,11 +18,11 @@ export function createApp(): Express {
   app.use(
     cors({
       origin(origin, callback) {
-        if (!origin || env.CORS_ORIGIN.includes(origin)) {
+        if (!origin || isCorsOriginAllowed(origin)) {
           callback(null, true)
           return
         }
-        callback(new Error('Not allowed by CORS'))
+        callback(null, false)
       },
       credentials: true,
     }),

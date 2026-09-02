@@ -13,13 +13,33 @@ function required(name: string): string {
   return value
 }
 
-function origins() {
-  const fromEnv = (process.env.CORS_ORIGIN ?? '')
+function parseOrigins() {
+  return (process.env.CORS_ORIGIN ?? '')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean)
+}
 
-  return fromEnv.length > 0 ? fromEnv : ['http://localhost:5173']
+const corsOrigins = parseOrigins()
+
+function matchOrigin(pattern: string, origin: string) {
+  if (pattern === origin) {
+    return true
+  }
+
+  if (!pattern.includes('*')) {
+    return false
+  }
+
+  const regex = new RegExp(
+    `^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\\\*/g, '.*')}$`,
+  )
+  return regex.test(origin)
+}
+
+export function isCorsOriginAllowed(origin: string) {
+  const allowed = env.CORS_ORIGIN
+  return allowed.some((pattern) => matchOrigin(pattern, origin))
 }
 
 export const env = {
@@ -29,6 +49,6 @@ export const env = {
   JWT_SECRET: required('JWT_SECRET'),
   ADMIN_EMAIL: required('ADMIN_EMAIL').toLowerCase(),
   ADMIN_PASSWORD: required('ADMIN_PASSWORD'),
-  CORS_ORIGIN: origins(),
+  CORS_ORIGIN: corsOrigins.length > 0 ? corsOrigins : ['http://localhost:5173'],
   isProduction: (process.env.NODE_ENV ?? 'development') === 'production',
 }
