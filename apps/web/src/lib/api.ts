@@ -12,8 +12,22 @@ export class ApiError extends Error {
   }
 }
 
+const PRODUCTION_API_URL = 'https://buzaao-api.vercel.app'
+
+function apiBase() {
+  const fromEnv = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
+
+  // Preview hosts like buzaao-api-git-master-*.vercel.app are behind Vercel SSO.
+  // A 302 to vercel.com/sso-api shows up in the browser as a CORS error.
+  if (!fromEnv || fromEnv.includes('-git-')) {
+    return import.meta.env.PROD ? PRODUCTION_API_URL : fromEnv
+  }
+
+  return fromEnv
+}
+
 function apiUrl(path: string) {
-  const base = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
+  const base = apiBase()
   const suffix = path.startsWith('/') ? path : `/${path}`
   return `${base}${suffix}`
 }
