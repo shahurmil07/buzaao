@@ -25,6 +25,17 @@ export const CORPORATE_SOLUTION = {
   cta: 'Get a precise quote',
 }
 
+export const REGISTRATION = {
+  business: {
+    label: 'Register your business now',
+    url: 'https://service.buzaao.com/organization_registration/13120260831185252',
+  },
+  premises: {
+    label: 'Register your building now',
+    url: 'https://service.buzaao.com/client_registration/13120260831185252',
+  },
+} as const
+
 function whatsappUrl(message: string) {
   return `https://wa.me/${CUSTOM_SOLUTION.whatsappNumber}?text=${encodeURIComponent(message)}`
 }

@@ -26,7 +26,7 @@ export function SolutionBanner({
   whatsappUrl,
 }: SolutionBannerProps) {
   return (
-    <aside className="flex items-center justify-between gap-6 rounded-2xl border-2 border-[color-mix(in_srgb,var(--color-brand)_18%,var(--color-line))] bg-[linear-gradient(105deg,#fffafa_0%,#fff_42%,#fff_100%)] px-6 py-5 max-lg:flex-col max-lg:items-start max-lg:gap-4 max-sm:px-4 max-sm:py-4">
+    <aside className="flex items-center justify-between gap-6 rounded-2xl border-2 border-[color-mix(in_srgb,var(--color-brand)_22%,var(--color-line))] bg-[linear-gradient(105deg,#fff5f5_0%,#fffafa_48%,#fff8f8_100%)] px-6 py-5 shadow-[0_2px_16px_rgba(227,30,36,0.06)] max-lg:flex-col max-lg:items-start max-lg:gap-4 max-sm:px-4 max-sm:py-4">
       <div className="flex min-w-0 flex-1 items-center gap-6 max-md:flex-col max-md:items-start max-md:gap-3">
         <div className="shrink-0">
           <p

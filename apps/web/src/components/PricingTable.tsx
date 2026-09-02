@@ -1,12 +1,7 @@
 import type { FeatureValue, PlanCategory, PricingPlan } from '../types'
-import {
-  CORPORATE_SOLUTION,
-  CUSTOM_SOLUTION,
-  corporateQuoteWhatsAppUrl,
-  customEstimateWhatsAppUrl,
-} from '../data/pricing'
+import { REGISTRATION } from '../data/pricing'
 import { cn } from '../lib/cn'
-import { SolutionBanner } from './SolutionBanner'
+import { RegisterBanner } from './RegisterBanner'
 
 interface PricingTableProps {
   category: PlanCategory
@@ -19,7 +14,7 @@ function FeatureCell({ value }: { value: FeatureValue }) {
     return (
       <span className="inline-flex items-center justify-center text-brand" aria-label="Included">
         <svg
-          className="max-sm:size-[15px]"
+          className="max-sm:size-3.75"
           width="18"
           height="18"
           viewBox="0 0 18 18"
@@ -148,26 +143,6 @@ export function PricingTable({ category, selectedPlanId, onSelectPlan }: Pricing
         ))}
       </div>
 
-      {category.id === 'business' ? (
-        <SolutionBanner
-          kicker={CUSTOM_SOLUTION.startsFrom}
-          headline={CUSTOM_SOLUTION.priceLabel}
-          title={CUSTOM_SOLUTION.title}
-          subtitle={CUSTOM_SOLUTION.features}
-          note={CUSTOM_SOLUTION.note}
-          whatsappLabel={CUSTOM_SOLUTION.whatsappLabel}
-          whatsappUrl={customEstimateWhatsAppUrl()}
-        />
-      ) : (
-        <SolutionBanner
-          kicker={CORPORATE_SOLUTION.kicker}
-          title={CORPORATE_SOLUTION.title}
-          subtitle={CORPORATE_SOLUTION.cta}
-          whatsappLabel={CORPORATE_SOLUTION.whatsappLabel}
-          whatsappUrl={corporateQuoteWhatsAppUrl()}
-        />
-      )}
-
       <div className="w-full">
         <p className="mb-3 font-display text-[0.8rem] font-bold tracking-[0.07em] text-muted uppercase max-sm:mb-2 max-sm:text-[0.68rem]">
           Compare all features
@@ -251,6 +226,13 @@ export function PricingTable({ category, selectedPlanId, onSelectPlan }: Pricing
         </span>
         {category.popularNote}
       </p>
+
+      <RegisterBanner
+        label={
+          category.id === 'business' ? REGISTRATION.business.label : REGISTRATION.premises.label
+        }
+        url={category.id === 'business' ? REGISTRATION.business.url : REGISTRATION.premises.url}
+      />
     </div>
   )
 }

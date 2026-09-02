@@ -5,7 +5,16 @@ import { Checkout } from '../components/Checkout'
 import { FaqAccordion } from '../components/FaqAccordion'
 import { OrderSummary } from '../components/OrderSummary'
 import { PricingTable } from '../components/PricingTable'
-import { ADDONS, PAGE, PLAN_CATEGORIES } from '../data/pricing'
+import { SolutionBanner } from '../components/SolutionBanner'
+import {
+  ADDONS,
+  CORPORATE_SOLUTION,
+  CUSTOM_SOLUTION,
+  PAGE,
+  PLAN_CATEGORIES,
+  corporateQuoteWhatsAppUrl,
+  customEstimateWhatsAppUrl,
+} from '../data/pricing'
 import type { SelectedAddon } from '../types'
 import { cn } from '../lib/cn'
 
@@ -71,18 +80,18 @@ export function PricingPage() {
     >
       <Header />
 
-      <main className="mx-auto w-full max-w-[1400px] px-6 pb-24 pt-5 max-sm:px-3 max-sm:pt-3 max-sm:pb-[calc(5rem+env(safe-area-inset-bottom,0px))]">
-        <section className="mx-auto mb-[1.1rem] max-w-[44rem] animate-fade-up text-center max-sm:mb-3 [animation-duration:0.5s]">
-          <h1 className="mb-[0.45rem] font-display text-[clamp(1.25rem,2.5vw,1.55rem)] font-extrabold leading-tight tracking-[-0.02em] text-ink max-sm:text-base">
+      <main className="mx-auto w-full max-w-[1400px] px-6 pb-24 pt-8 max-sm:px-4 max-sm:pt-5 max-sm:pb-[calc(5rem+env(safe-area-inset-bottom,0px))]">
+        <section className="mx-auto mb-7 max-w-[44rem] animate-fade-up text-center max-sm:mb-5 [animation-duration:0.5s]">
+          <h1 className="mb-3 font-display text-[clamp(1.25rem,2.5vw,1.55rem)] font-extrabold leading-tight tracking-[-0.02em] text-ink max-sm:mb-2.5 max-sm:text-base">
             {PAGE.title}
           </h1>
-          <p className="m-0 text-[0.88rem] leading-[1.55] text-muted max-sm:text-[0.76rem] max-sm:leading-[1.45]">
+          <p className="m-0 text-[0.88rem] leading-[1.65] text-muted max-sm:text-[0.76rem] max-sm:leading-[1.55]">
             {PAGE.description}
           </p>
         </section>
 
         <div
-          className="mx-auto mb-5 flex w-full max-w-[360px] animate-fade-up gap-1 rounded-[10px] border border-line bg-white p-1 shadow-[0_1px_8px_rgba(17,17,17,0.04)] max-sm:mb-[0.85rem] max-sm:max-w-none max-sm:p-[0.2rem] [animation-delay:60ms] [animation-duration:0.5s]"
+          className="mx-auto mb-8 flex w-full max-w-[360px] animate-fade-up gap-1 rounded-[10px] border border-line bg-white p-1 shadow-[0_1px_8px_rgba(17,17,17,0.04)] max-sm:mb-6 max-sm:max-w-none max-sm:p-[0.25rem] [animation-delay:60ms] [animation-duration:0.5s]"
           role="tablist"
           aria-label="Plan categories"
         >
@@ -96,7 +105,7 @@ export function PricingPage() {
                 aria-selected={active}
                 aria-controls={`${category.id}-panel`}
                 className={cn(
-                  'flex-1 cursor-pointer rounded-lg border-none px-3 py-[0.55rem] font-display text-[0.78rem] font-bold transition-[background-color,color,box-shadow,transform] duration-180 ease-smooth active:scale-[0.98] max-sm:px-[0.35rem] max-sm:py-[0.45rem] max-sm:text-[0.68rem]',
+                  'flex-1 cursor-pointer rounded-lg border-none px-3 py-[0.65rem] font-display text-[0.78rem] font-bold transition-[background-color,color,box-shadow,transform] duration-180 ease-smooth active:scale-[0.98] max-sm:px-2 max-sm:py-[0.55rem] max-sm:text-[0.72rem]',
                   active
                     ? 'bg-[#e31e24] text-white shadow-[0_2px_10px_rgba(227,30,36,0.22)]'
                     : 'bg-transparent text-muted hover:text-ink',
@@ -117,14 +126,14 @@ export function PricingPage() {
           return (
             <div key={category.id} id={`${category.id}-panel`} role="tabpanel">
               <section className="w-full animate-fade-up" aria-labelledby="plan-section-title">
-                <header className="mb-6 border-b border-line pb-5 max-sm:mb-[0.85rem] max-sm:pb-[0.7rem]">
+                <header className="mb-7 border-b border-line pb-6 max-sm:mb-5 max-sm:pb-4">
                   <h2
                     id="plan-section-title"
-                    className="mb-[0.45rem] font-display text-[clamp(1.35rem,3vw,1.75rem)] font-extrabold tracking-[-0.02em] text-ink max-sm:text-[0.95rem]"
+                    className="mb-2.5 font-display text-[clamp(1.35rem,3vw,1.75rem)] font-extrabold tracking-[-0.02em] text-ink max-sm:mb-2 max-sm:text-[1.05rem]"
                   >
                     {category.title}
                   </h2>
-                  <p className="m-0 max-w-[48rem] text-[0.95rem] leading-[1.65] text-muted max-sm:text-[0.76rem] max-sm:leading-[1.45]">
+                  <p className="m-0 max-w-[48rem] text-[0.95rem] leading-[1.7] text-muted max-sm:text-[0.78rem] max-sm:leading-[1.55]">
                     {category.subtitle}
                   </p>
                 </header>
@@ -146,6 +155,28 @@ export function PricingPage() {
                     : 'QR mapping add-ons for your Premises plan. Set quantity to add to your total.'
                 }
               />
+
+              <div className="mt-8 animate-fade-up max-sm:mt-5">
+                {category.id === 'business' ? (
+                  <SolutionBanner
+                    kicker={CUSTOM_SOLUTION.startsFrom}
+                    headline={CUSTOM_SOLUTION.priceLabel}
+                    title={CUSTOM_SOLUTION.title}
+                    subtitle={CUSTOM_SOLUTION.features}
+                    note={CUSTOM_SOLUTION.note}
+                    whatsappLabel={CUSTOM_SOLUTION.whatsappLabel}
+                    whatsappUrl={customEstimateWhatsAppUrl()}
+                  />
+                ) : (
+                  <SolutionBanner
+                    kicker={CORPORATE_SOLUTION.kicker}
+                    title={CORPORATE_SOLUTION.title}
+                    subtitle={CORPORATE_SOLUTION.cta}
+                    whatsappLabel={CORPORATE_SOLUTION.whatsappLabel}
+                    whatsappUrl={corporateQuoteWhatsAppUrl()}
+                  />
+                )}
+              </div>
 
               <FaqAccordion title={`FAQs — ${category.title}`} items={category.faqs} />
             </div>
