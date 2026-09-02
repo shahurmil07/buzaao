@@ -13,11 +13,19 @@ function required(name: string): string {
   return value
 }
 
+const DEFAULT_CORS_ORIGINS = [
+  'http://localhost:5173',
+  'https://buzaao-web.vercel.app',
+  'https://*.vercel.app',
+]
+
 function parseOrigins() {
-  return (process.env.CORS_ORIGIN ?? '')
+  const fromEnv = (process.env.CORS_ORIGIN ?? '')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean)
+
+  return [...new Set([...DEFAULT_CORS_ORIGINS, ...fromEnv])]
 }
 
 const corsOrigins = parseOrigins()
@@ -31,9 +39,7 @@ function matchOrigin(pattern: string, origin: string) {
     return false
   }
 
-  const regex = new RegExp(
-    `^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\\\*/g, '.*')}$`,
-  )
+  const regex = new RegExp(`^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`)
   return regex.test(origin)
 }
 
@@ -49,6 +55,6 @@ export const env = {
   JWT_SECRET: required('JWT_SECRET'),
   ADMIN_EMAIL: required('ADMIN_EMAIL').toLowerCase(),
   ADMIN_PASSWORD: required('ADMIN_PASSWORD'),
-  CORS_ORIGIN: corsOrigins.length > 0 ? corsOrigins : ['http://localhost:5173'],
+  CORS_ORIGIN: corsOrigins,
   isProduction: (process.env.NODE_ENV ?? 'development') === 'production',
 }
